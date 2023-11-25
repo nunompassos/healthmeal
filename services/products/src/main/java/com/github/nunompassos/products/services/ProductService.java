@@ -1,5 +1,8 @@
 package com.github.nunompassos.products.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.github.nunompassos.products.entities.Product;
@@ -70,8 +73,17 @@ public class ProductService {
         );
     }
 
-    public void listProducts() {
-
+    public List<ProductDto> listProducts() {
+        return productRepository
+            .findAll()
+            .stream()
+            .map(product -> new ProductDto(
+                product.getId(),
+                product.getName(),
+                ProductDto.DishType.valueOf(product.getType().name()),
+                product.getCalories()
+            ))
+            .collect(Collectors.toList());
     }
 
     public ProductDto getProduct(
