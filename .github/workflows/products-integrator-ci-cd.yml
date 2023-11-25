@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build Products application
+    name: Build Products Integrator library
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -22,5 +22,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build Products application
+      - name: Build Products Integrator library
         run: mvn clean package --batch-mode --also-make --projects :products-integrator
