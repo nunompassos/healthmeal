@@ -74,8 +74,17 @@ public class ProductService {
 
     }
 
-    public void getProduct() {
+    public ProductDto getProduct(
+        final String id
+    ) {
+        final Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
 
+        return new ProductDto(
+            product.getId(),
+            product.getName(),
+            ProductDto.DishType.valueOf(product.getType().name()),
+            product.getCalories()
+        );
     }
 
 }

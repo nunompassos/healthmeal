@@ -123,6 +123,39 @@ public class ProductServiceTest {
         );
 
         assertEquals("old-product", ex.getMessage(), "Exception message should be the old id");
+        verify(productRepository, never()).delete(any(Product.class));
+    }
+
+    @Test
+    public void getProduct_happyPath() {
+        final Product product = new Product(
+            "old-product",
+            "old-product-entry-name",
+            Product.DishType.BEVERAGE,
+            20
+        );
+
+        when(productRepository.findById("old-product")).thenReturn(Optional.of(product));
+
+        final ProductDto result = underTest.getProduct("old-product");
+
+        assertEquals(product.getName(), result.name(), "Resulting name should be " + product.getName());
+        assertEquals(product.getType(), Product.DishType.valueOf(result.dishType().name()), "Resulting dish type should be " + product.getType());
+        assertEquals(product.getCalories(), result.calories(), "Resulting calories should be " + product.getCalories());
+        verify(productRepository, times(1)).findById("old-product");
+    }
+
+    @Test
+    public void getProduct_productNotFound() {
+        when(productRepository.findById("old-product")).thenReturn(Optional.empty());
+
+        final Exception ex = assertThrows(
+            EntityNotFoundException.class,
+            () -> underTest.getProduct("old-product"),
+            "Exception should be EntityNotFound"
+        );
+
+        assertEquals("old-product", ex.getMessage(), "Exception message should be the old id");
     }
 
 }
