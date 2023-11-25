@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.github.nunompassos.products.entities.Product;
 
 @Repository
-public interface ProductsRepository extends JpaRepository<Product, String> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 }
