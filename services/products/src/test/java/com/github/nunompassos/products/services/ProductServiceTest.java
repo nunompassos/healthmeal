@@ -83,8 +83,46 @@ public class ProductServiceTest {
 
         when(productRepository.findById("old-product")).thenReturn(Optional.empty());
 
-        final Exception ex = assertThrows(EntityNotFoundException.class, () -> underTest.updateProduct("old-product", requestDto), "");
+        final Exception ex = assertThrows(
+            EntityNotFoundException.class,
+            () -> underTest.updateProduct("old-product", requestDto),
+            "Exception should be EntityNotFound"
+        );
 
         assertEquals("old-product", ex.getMessage(), "Exception message should be the old id");
     }
+
+    @Test
+    public void deleteProduct_happyPath() {
+        final Product product = new Product(
+            "old-product",
+            "old-product-entry-name",
+            Product.DishType.BEVERAGE,
+            20
+        );
+
+        when(productRepository.findById("old-product")).thenReturn(Optional.of(product));
+
+        final ProductDto result = underTest.deleteProduct("old-product");
+
+        assertEquals(product.getName(), result.name(), "Resulting name should be " + product.getName());
+        assertEquals(product.getType(), Product.DishType.valueOf(result.dishType().name()), "Resulting dish type should be " + product.getType());
+        assertEquals(product.getCalories(), result.calories(), "Resulting calories should be " + product.getCalories());
+        verify(productRepository, times(1)).findById("old-product");
+        verify(productRepository, times(1)).delete(product);
+    }
+
+    @Test
+    public void deleteProduct_productNotFound() {
+        when(productRepository.findById("old-product")).thenReturn(Optional.empty());
+
+        final Exception ex = assertThrows(
+            EntityNotFoundException.class,
+            () -> underTest.deleteProduct("old-product"),
+            "Exception should be EntityNotFound"
+        );
+
+        assertEquals("old-product", ex.getMessage(), "Exception message should be the old id");
+    }
+
 }

@@ -55,8 +55,19 @@ public class ProductService {
         );
     }
 
-    public void deleteProduct() {
+    public ProductDto deleteProduct(
+        final String id
+    ) {
+        final Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
 
+        productRepository.delete(product);
+
+        return new ProductDto(
+            product.getId(),
+            product.getName(),
+            ProductDto.DishType.valueOf(product.getType().name()),
+            product.getCalories()
+        );
     }
 
     public void listProducts() {
