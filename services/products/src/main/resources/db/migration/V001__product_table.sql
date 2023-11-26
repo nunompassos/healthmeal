@@ -4,5 +4,7 @@ CREATE TABLE IF NOT EXISTS product(
     dish_type VARCHAR(255) NOT NULL,
     calories INT NOT NULL,
 
-    CONSTRAINT pk_product PRIMARY KEY(id)
+    CONSTRAINT product_pkey PRIMARY KEY(id)
 );
+
+GRANT SELECT ON TABLE product TO postgres;
