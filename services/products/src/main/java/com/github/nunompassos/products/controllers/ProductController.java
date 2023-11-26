@@ -1,9 +1,11 @@
 package com.github.nunompassos.products.controllers;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.github.nunompassos.products.entities.Product;
 import com.github.nunompassos.products.integrator.dto.ProductDto;
 import com.github.nunompassos.products.integrator.dto.ProductRequestDto;
 import com.github.nunompassos.products.services.ProductService;
@@ -43,8 +45,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public @ResponseBody List<ProductDto> listProducts() {
-        return service.listProducts();
+    public @ResponseBody List<ProductDto> listProducts(
+        @RequestParam(required = false) final String name,
+        @RequestParam(required = false) final Product.DishType type
+    ) {
+        return Objects.isNull(name) ? service.listProducts() : List.of(service.getProductByNameAndType(name, type));
     }
 
     @GetMapping("/{id}")

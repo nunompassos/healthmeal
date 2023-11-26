@@ -71,4 +71,14 @@ public class ProductService {
             .toDto();
     }
 
+    public ProductDto getProductByNameAndType(
+        final String name,
+        final Product.DishType type
+    ) {
+        return repository
+            .findByNameAndType(name, type)
+            .orElseThrow(() -> new EntityNotFoundException(name))
+            .toDto();
+    }
+
 }

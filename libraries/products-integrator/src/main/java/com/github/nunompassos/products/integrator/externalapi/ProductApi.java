@@ -35,7 +35,7 @@ public class ProductApi {
         final URI targetUrl = UriComponentsBuilder
             .fromUriString(PRODUCT_API)
             .queryParam("name", name)
-            .queryParam("dishType", dishType)
+            .queryParam("type", dishType)
             .build()
             .toUri();
         ResponseEntity<ProductDto[]> response = restTemplate.getForEntity(targetUrl, ProductDto[].class);

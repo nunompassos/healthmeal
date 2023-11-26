@@ -87,6 +87,7 @@ public class OrderService {
         return Order
             .builder()
             .userId(user.id())
+            .userName(user.name())
             .entry(entry.name())
             .entryCalories(entry.calories())
             .mainCourse(mainCourse.name())
