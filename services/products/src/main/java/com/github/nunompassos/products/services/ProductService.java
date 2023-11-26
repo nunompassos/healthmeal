@@ -15,10 +15,10 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
-    public ProductService(final ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(final ProductRepository repository) {
+        this.repository = repository;
     }
 
     public ProductDto createProduct(final ProductRequestDto requestDto) {
@@ -28,75 +28,47 @@ public class ProductService {
                 .calories(requestDto.calories())
                 .build();
 
-        final Product savedProduct = productRepository.save(product);
-
-        return new ProductDto(
-            savedProduct.getId(),
-            savedProduct.getName(),
-            ProductDto.DishType.valueOf(savedProduct.getType().name()),
-            savedProduct.getCalories()
-        );
+        return repository.save(product).toDto();
     }
 
     public ProductDto updateProduct(
         final String id,
         final ProductRequestDto requestDto
     ) {
-        final Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        final Product product = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
 
         product.setName(requestDto.name());
         product.setType(Product.DishType.valueOf(requestDto.dishType().name()));
         product.setCalories(requestDto.calories());
 
-        final Product savedProduct = productRepository.save(product);
-
-        return new ProductDto(
-            savedProduct.getId(),
-            savedProduct.getName(),
-            ProductDto.DishType.valueOf(savedProduct.getType().name()),
-            savedProduct.getCalories()
-        );
+        return repository.save(product).toDto();
     }
 
     public ProductDto deleteProduct(
         final String id
     ) {
-        final Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        final Product product = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
 
-        productRepository.delete(product);
+        repository.delete(product);
 
-        return new ProductDto(
-            product.getId(),
-            product.getName(),
-            ProductDto.DishType.valueOf(product.getType().name()),
-            product.getCalories()
-        );
+        return product.toDto();
     }
 
     public List<ProductDto> listProducts() {
-        return productRepository
+        return repository
             .findAll()
             .stream()
-            .map(product -> new ProductDto(
-                product.getId(),
-                product.getName(),
-                ProductDto.DishType.valueOf(product.getType().name()),
-                product.getCalories()
-            ))
+            .map(Product::toDto)
             .collect(Collectors.toList());
     }
 
     public ProductDto getProduct(
         final String id
     ) {
-        final Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
-
-        return new ProductDto(
-            product.getId(),
-            product.getName(),
-            ProductDto.DishType.valueOf(product.getType().name()),
-            product.getCalories()
-        );
+        return repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(id))
+            .toDto();
     }
 
 }

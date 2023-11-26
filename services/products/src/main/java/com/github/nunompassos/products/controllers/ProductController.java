@@ -12,46 +12,46 @@ import com.github.nunompassos.products.services.ProductService;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService service;
 
     public ProductController(
-        final ProductService productService
+        final ProductService service
     ) {
-        this.productService = productService;
+        this.service = service;
     }
 
     @PostMapping
-    public ProductDto createProduct(
+    public @ResponseBody ProductDto createProduct(
         @RequestBody final ProductRequestDto requestDto
     ) {
-        return productService.createProduct(requestDto);
+        return service.createProduct(requestDto);
     }
 
     @PutMapping("/{id}")
-    public ProductDto updateProduct(
+    public @ResponseBody ProductDto updateProduct(
         @PathVariable final String id,
         @RequestBody final ProductRequestDto requestDto
     ) {
-        return productService.updateProduct(id, requestDto);
+        return service.updateProduct(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
-    public ProductDto deleteProduct(
+    public @ResponseBody ProductDto deleteProduct(
         @PathVariable final String id
     ) {
-        return productService.deleteProduct(id);
+        return service.deleteProduct(id);
     }
 
     @GetMapping
-    public List<ProductDto> listProducts() {
-        return productService.listProducts();
+    public @ResponseBody List<ProductDto> listProducts() {
+        return service.listProducts();
     }
 
     @GetMapping("/{id}")
-    public ProductDto getProduct(
+    public @ResponseBody ProductDto getProduct(
         @PathVariable final String id
     ) {
-        return productService.getProduct(id);
+        return service.getProduct(id);
     }
 
 }

@@ -1,15 +1,15 @@
-name: Users Integrator CI/CD
+name: Orders CI/CD
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'libraries/users-integrator/**'
+      - 'services/orders/**'
 
 jobs:
   build:
-    name: Build Users Integrator library
+    name: Build Products application
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -22,5 +22,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build Users Integrator library
-        run: mvn clean package --batch-mode --also-make --projects :users-integrator
+      - name: Build Orders application
+        run: mvn clean package --batch-mode --also-make --projects :orders

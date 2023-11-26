@@ -1,5 +1,7 @@
 package com.github.nunompassos.products.entities;
 
+import com.github.nunompassos.products.integrator.dto.ProductDto;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +29,15 @@ public class Product {
         MAIN_COURSE,
 
         BEVERAGE
+    }
+
+    public ProductDto toDto() {
+        return new ProductDto(
+            id,
+            name,
+            ProductDto.DishType.valueOf(type.name()),
+            calories
+        );
     }
 
 }

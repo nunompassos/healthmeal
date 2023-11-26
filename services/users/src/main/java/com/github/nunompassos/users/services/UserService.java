@@ -13,10 +13,10 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UserRepository repository) {
+        this.repository = repository;
     }
 
     public UserDto createUser(final UserRequestDto userDto) {
@@ -26,72 +26,53 @@ public class UserService {
             .totalCalories(0)
             .build();
 
-        final User savedUser = userRepository.save(user);
-
-        return new UserDto(
-            savedUser.getId(),
-            savedUser.getName(),
-            savedUser.getTotalMeals(),
-            savedUser.getTotalCalories()
-        );
+        return repository.save(user).toDto();
     }
 
     public UserDto updateUser(
         final String id,
         final UserRequestDto userDto
     ) {
-        final User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        final User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
         user.setName(userDto.name());
 
-        final User savedUser = userRepository.save(user);
-
-        return new UserDto(
-            savedUser.getId(),
-            savedUser.getName(),
-            savedUser.getTotalMeals(),
-            savedUser.getTotalCalories()
-        );
+        return repository.save(user).toDto();
     }
 
     public UserDto deleteUser(
         final String id
     ) {
-        final User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        final User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
 
-        userRepository.delete(user);
+        repository.delete(user);
 
-        return new UserDto(
-            user.getId(),
-            user.getName(),
-            user.getTotalMeals(),
-            user.getTotalCalories()
-        );
+        return user.toDto();
     }
 
     public List<UserDto> listUsers() {
-        return userRepository
+        return repository
             .findAll()
             .stream()
-            .map(user -> new UserDto(
-                user.getId(),
-                user.getName(),
-                user.getTotalMeals(),
-                user.getTotalCalories()
-            ))
+            .map(User::toDto)
             .toList();
     }
 
     public UserDto getUser(
         final String id
     ) {
-        final User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        return repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(id))
+            .toDto();
+    }
 
-        return new UserDto(
-            user.getId(),
-            user.getName(),
-            user.getTotalMeals(),
-            user.getTotalCalories()
-        );
+    public UserDto getUserByName(
+        String name
+    ) {
+        return repository
+            .findByName(name)
+            .orElseThrow(() -> new EntityNotFoundException(name))
+            .toDto();
     }
 
 }
