@@ -30,8 +30,6 @@ services:
       - DATASOURCE_USERNAME=product_user
       - DATASOURCE_PASSWORD=product_password
       - PRODUCTS_PORT=9090
-#    volumes:
-#      - .:/usr/src/mymaven
     networks:
       - healthmealnetwork
 
@@ -48,8 +46,6 @@ services:
       - DATASOURCE_USERNAME=user_user
       - DATASOURCE_PASSWORD=user_password
       - USERS_PORT=9090
-#    volumes:
-#      - .:/usr/src/mymaven
     networks:
       - healthmealnetwork
 
@@ -68,8 +64,6 @@ services:
       - ORDER_PORT=9090
       - PRODUCTS_URL=http://products:9090
       - USERS_URL=http://users:9090
-#    volumes:
-#      - .:/usr/src/mymaven
     networks:
       - healthmealnetwork
 

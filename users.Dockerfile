@@ -10,11 +10,3 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/services/users/target/users.jar .
 CMD ["java", "-jar", "users.jar"]
-
-# COPY users_entrypoint.sh /usr/local/bin/entrypoint.sh
-# RUN chmod +x /usr/local/bin/entrypoint.sh
-
-#Start application
-# WORKDIR /usr/src/mymaven
-# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-# CMD ["bash"]
