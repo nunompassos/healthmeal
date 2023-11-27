@@ -5,35 +5,40 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.github.nunompassos.products.integrator.dto.ProductDto;
 
+@Component
 public class ProductApi {
 
-    private static final String PRODUCT_API = "http://localhost:9091/api/v1/products";
+    @Value("${products.integrator.products.url:http://localhost:9090}")
+    private String PRODUCT_API;
 
-    public static List<ProductDto> getEntryProductsByName(final String name) {
+    public List<ProductDto> getEntryProductsByName(final String name) {
         return getProductsByNameAndDishType(name, ProductDto.DishType.ENTRY);
     }
 
-    public static List<ProductDto> getMainCourseProductsByName(final String name) {
+    public List<ProductDto> getMainCourseProductsByName(final String name) {
         return getProductsByNameAndDishType(name, ProductDto.DishType.MAIN_COURSE);
     }
 
-    public static List<ProductDto> getBeverageProductsByName(final String name) {
+    public List<ProductDto> getBeverageProductsByName(final String name) {
         return getProductsByNameAndDishType(name, ProductDto.DishType.BEVERAGE);
     }
 
-    public static List<ProductDto> getProductsByNameAndDishType(
+    public List<ProductDto> getProductsByNameAndDishType(
         final String name,
         final ProductDto.DishType dishType
     ) {
+        System.out.println("NMP - " + PRODUCT_API);
         final RestTemplate restTemplate = new RestTemplate();
         final URI targetUrl = UriComponentsBuilder
-            .fromUriString(PRODUCT_API)
+            .fromUriString(PRODUCT_API + "/api/v1/products")
             .queryParam("name", name)
             .queryParam("type", dishType)
             .build()

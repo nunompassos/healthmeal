@@ -11,7 +11,7 @@ import com.github.nunompassos.orders.repositories.OrderRepository;
 import com.github.nunompassos.products.integrator.dto.ProductDto;
 import com.github.nunompassos.products.integrator.externalapi.ProductApi;
 import com.github.nunompassos.users.integrator.dto.UserDto;
-import com.github.nunompassos.users.integrator.externalapi.UserAPI;
+import com.github.nunompassos.users.integrator.externalapi.UserApi;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -19,9 +19,17 @@ import jakarta.persistence.EntityNotFoundException;
 public class OrderService {
 
     private final OrderRepository repository;
+    private final ProductApi productApi;
+    private final UserApi userApi;
 
-    public OrderService(OrderRepository repository) {
+    public OrderService(
+        OrderRepository repository,
+        ProductApi productApi,
+        UserApi userApi
+    ) {
         this.repository = repository;
+        this.productApi = productApi;
+        this.userApi = userApi;
     }
 
     public OrderDto createOrder(OrderRequestDto requestDto) {
@@ -79,10 +87,10 @@ public class OrderService {
     }
 
     private Order createOrderEntity(final OrderRequestDto requestDto) {
-        final UserDto user = UserAPI.getUserByName(requestDto.userName()).get(0);
-        final ProductDto entry = ProductApi.getEntryProductsByName(requestDto.entry()).get(0);
-        final ProductDto mainCourse = ProductApi.getMainCourseProductsByName(requestDto.mainCourse()).get(0);
-        final ProductDto beverage = ProductApi.getBeverageProductsByName(requestDto.beverage()).get(0);
+        final UserDto user = userApi.getUserByName(requestDto.userName()).get(0);
+        final ProductDto entry = productApi.getEntryProductsByName(requestDto.entry()).get(0);
+        final ProductDto mainCourse = productApi.getMainCourseProductsByName(requestDto.mainCourse()).get(0);
+        final ProductDto beverage = productApi.getBeverageProductsByName(requestDto.beverage()).get(0);
 
         return Order
             .builder()

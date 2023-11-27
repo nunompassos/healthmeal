@@ -12,3 +12,67 @@ services:
       POSTGRES_PASSWORD: pass
     volumes:
       - ./docker/postgresql/:/docker-entrypoint-initdb.d
+    networks:
+      healthmealnetwork:
+        aliases:
+          - "healthmealdb"
+
+  products:
+    build:
+      context: .
+      dockerfile: products.Dockerfile
+    ports:
+      - "9091:9090"
+    depends_on:
+      - database
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://healthmealdb/healthmeal
+      - DATASOURCE_USERNAME=product_user
+      - DATASOURCE_PASSWORD=product_password
+      - PRODUCTS_PORT=9090
+#    volumes:
+#      - .:/usr/src/mymaven
+    networks:
+      - healthmealnetwork
+
+  users:
+    build:
+      context: .
+      dockerfile: users.Dockerfile
+    ports:
+      - "9090:9090"
+    depends_on:
+      - database
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://healthmealdb/healthmeal
+      - DATASOURCE_USERNAME=user_user
+      - DATASOURCE_PASSWORD=user_password
+      - USERS_PORT=9090
+#    volumes:
+#      - .:/usr/src/mymaven
+    networks:
+      - healthmealnetwork
+
+  orders:
+    build:
+      context: .
+      dockerfile: orders.Dockerfile
+    ports:
+      - "9092:9090"
+    depends_on:
+      - database
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://healthmealdb/healthmeal
+      - DATASOURCE_USERNAME=order_user
+      - DATASOURCE_PASSWORD=order_password
+      - ORDER_PORT=9090
+      - PRODUCTS_URL=http://products:9090
+      - USERS_URL=http://users:9090
+#    volumes:
+#      - .:/usr/src/mymaven
+    networks:
+      - healthmealnetwork
+
+networks:
+  healthmealnetwork:
+    driver: bridge
